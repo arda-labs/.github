@@ -1,104 +1,80 @@
 # Arda Labs
 
-> **Where data flows with intelligence.**
+> Where data flows with intelligence.
 
-**Arda Labs** xây dựng hệ thống quản trị doanh nghiệp multi-tenant trên nền tảng cloud-native:
+Arda Labs builds a cloud-native, multi-tenant financial and banking platform.
+The current codebase is organized as an application monorepo plus a separate
+GitOps infrastructure repository.
 
-- **Micro-Frontend** (Angular + Module Federation)
-- **Microservices** (Go + Java/Spring Boot)
-- **GitOps** (ArgoCD + K3s)
-- **APISIX** API Gateway + Cloudflare Tunnel
+## Current Architecture
 
----
-
-## Brand
-
-| Thuộc tính      | Giá trị                                               |
-| --------------- | ----------------------------------------------------- |
-| **Name**        | ARDA Labs                                             |
-| **Fonts**       | Space Grotesk (logo) · Inter (text)                   |
-| **Colors**      | Cyan `#06B6D4` · Indigo `#6366F1` · Midnight `#0F172A` |
-| **Style**       | Minimal · Futuristic · Data-oriented                  |
-| **Slogan**      | _"Where data flows with intelligence."_               |
-
----
-
-# Arda Platform Architecture
-
-```
-Browser → Cloudflare Tunnel → APISIX Gateway → [K8s Services]
-                                       ├─ mfe-shell    (Angular Host)
-                                       ├─ mfe-common   (Angular Remote)
-                                       ├─ go-crm       (Go microservice)
-                                       └─ ...
+```text
+Browser
+  -> Cloudflare / local APISIX
+  -> APISIX Gateway
+     |-- mfe-shell
+     |-- mfe-iam
+     |-- mfe-mdm
+     |-- iam-service
+     |-- mdm-service
+  -> PostgreSQL + Zitadel on thinkcenter
 ```
 
-## CI/CD Flow
+## Active Repositories
 
-```
-git push (main) → GitHub Actions
-  ├─ lint · test · build (Nx)
-  ├─ Docker build + push (GHCR)
-  └─ Update tag in arda-infra → ArgoCD auto-sync → K3s deploys
-```
+| Repository | Purpose |
+| --- | --- |
+| [`arda`](https://github.com/arda-labs/arda) | Application monorepo: Angular MFEs, Go services, Java/Kotlin prototypes, shared libs, docs, CI |
+| [`arda-infra`](https://github.com/arda-labs/arda-infra) | GitOps manifests, APISIX routes, ArgoCD apps, runtime config, local APISIX |
+| [`.github`](https://github.com/arda-labs/.github) | Organization profile and GitHub metadata |
+
+Older split-repo names such as `arda-mfe`, `arda-be`, and `arda-core` are not
+the active source of truth.
+
+## Current Modules
+
+| Module | Status |
+| --- | --- |
+| `mfe-shell` | Active Angular host app |
+| `mfe-iam` | Active Angular remote MFE |
+| `mfe-mdm` | Active Angular remote MFE |
+| `iam-service` | Active Go/Kratos service |
+| `mdm-service` | Active Go/Kratos service |
+| `accounting_tmp` | Java/Kotlin accounting prototype |
 
 ## Tech Stack
 
-| Layer        | Technology                                                       |
-| :----------- | :--------------------------------------------------------------- |
-| **Frontend** | Angular 21 · Module Federation · Rspack · PrimeNG · Tailwind CSS |
-| **Backend**  | Go (CRM) · Java 21 / Spring Boot 3.5                             |
-| **Infra**    | K3s · ArgoCD · Kustomize · APISIX · Cloudflare Tunnel            |
-| **CI/CD**    | GitHub Actions · GHCR · Git-based tag promotion                  |
-| **Security** | Cloudflare Zero Trust · APISIX · Keycloak                        |
+| Layer | Current technology |
+| --- | --- |
+| Frontend | Angular 21, Native Federation, PrimeNG, Tailwind CSS |
+| Go backend | Go 1.26, Kratos, pgx, protobuf, Wire |
+| Java prototype | Kotlin/Java 21, Gradle |
+| Gateway | Apache APISIX |
+| Identity | Zitadel |
+| GitOps | ArgoCD, Kustomize |
+| Runtime | K3s on `thinkcenter`, GHCR images |
 
-## Repositories
+## Runtime Routes
 
-### Frontend — [arda-mfe](https://github.com/arda-labs/arda-mfe)
+| Route | Target |
+| --- | --- |
+| `/*` | Shell MFE |
+| `/mfe-iam/*` | IAM remote assets |
+| `/mfe-mdm/*` | MDM remote assets |
+| `/api/v1/*` | IAM service |
+| `/api/v1/mdm/*` | MDM service |
 
-Nx monorepo with Angular Module Federation.
+## Brand
 
-| App              | Role                                     |
-| :--------------- | :--------------------------------------- |
-| `apps/shell`     | Host app — Auth, Layout, Navigation      |
-| `apps/common`    | Remote MFE — Shared components & routes  |
+| Attribute | Value |
+| --- | --- |
+| Name | ARDA Labs |
+| Fonts | Space Grotesk for logo, Inter for text |
+| Colors | Cyan `#06B6D4`, Indigo `#6366F1`, Midnight `#0F172A` |
+| Style | Minimal, data-oriented, operational |
+| Slogan | Where data flows with intelligence. |
 
-### Infrastructure — [arda-infra](https://github.com/arda-labs/arda-infra)
-
-GitOps-managed Kubernetes manifests with Kustomize overlays.
-
-| Component       | Namespace   | Purpose                              |
-| :-------------- | :---------- | :----------------------------------- |
-| APISIX Gateway  | `gateway`   | API Gateway + routing (admin API)    |
-| Cloudflared     | `infra`     | Cloudflare Tunnel ingress            |
-| mfe-shell       | `arda-dev`  | Angular shell app (nginx)            |
-| mfe-common      | `arda-dev`  | Angular remote MFE (nginx)           |
-| go-crm          | `arda-dev`  | CRM microservice (Go)                |
-
-### Backend — [arda-be](https://github.com/arda-labs/arda-be)
-
-Go microservices.
-
----
-
-## Quick Start
-
-```bash
-# 1. Bootstrap K3s cluster
-git clone https://github.com/arda-labs/arda-infra
-cd arda-infra
-./scripts/bootstrap.sh
-
-# 2. Configure APISIX routes
-./scripts/apisix-routes.sh
-
-# 3. Setup Cloudflare Tunnel
-# Configure tunnel to route arda.io.vn → http://apisix-gateway.gateway:80
-```
-
-Push to `main` in `arda-mfe` triggers automatic deployment via CI/CD pipeline.
-
----
+## Links
 
 - Website: [arda.io.vn](https://arda.io.vn)
-- Contact: **contact@arda.io.vn**
+- Contact: contact@arda.io.vn
