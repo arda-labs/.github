@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio-skill" modified="2026-07-13T04:00:00.000Z" agent="arda-ai" version="24.0.0" etag="Infrastructure">
+  <diagram id="2" name="Infrastructure">
+    <mxGraphModel dx="0" dy="0" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+<mxCell id="3" value="SOURCE &amp; REGISTRY" style="swimlane;startSize=30;fillColor=#1E293B;strokeColor=#C084FC;fontColor=#C084FC;fontSize=14;fontStyle=1;whiteSpace=wrap;html=1;rounded=1;arcSize=8;" parent="1" vertex="1"><mxGeometry x="20" y="70" width="1560" height="90" as="geometry" /></mxCell>
+<mxCell id="5" value="arda-be" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#3B0764;strokeColor=#C084FC;fontColor=#F8FAFC;fontSize=10;" parent="1" vertex="1"><mxGeometry x="60" y="105" width="140" height="40" as="geometry" /></mxCell>
+<mxCell id="7" value="arda-mfe" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#3B0764;strokeColor=#C084FC;fontColor=#F8FAFC;fontSize=10;" parent="1" vertex="1"><mxGeometry x="240" y="105" width="140" height="40" as="geometry" /></mxCell>
+<mxCell id="9" value="arda-infra" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#3B0764;strokeColor=#C084FC;fontColor=#F8FAFC;fontSize=10;" parent="1" vertex="1"><mxGeometry x="420" y="105" width="140" height="40" as="geometry" /></mxCell>
+<mxCell id="11" value="GHCR" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#64748B;fontColor=#F8FAFC;fontSize=11;fontStyle=1;" parent="1" vertex="1"><mxGeometry x="620" y="105" width="150" height="40" as="geometry" /></mxCell>
+<mxCell id="13" value="Argo CD" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#3B0764;strokeColor=#C084FC;fontColor=#F8FAFC;fontSize=11;fontStyle=1;" parent="1" vertex="1"><mxGeometry x="60" y="180" width="280" height="44" as="geometry" /></mxCell>
+<mxCell id="14" value="K3S CLUSTER (3 nodes)" style="swimlane;startSize=30;fillColor=#1E293B;strokeColor=#6366F1;fontColor=#6366F1;fontSize=14;fontStyle=1;whiteSpace=wrap;html=1;rounded=1;arcSize=8;" parent="1" vertex="1"><mxGeometry x="20" y="244" width="1560" height="720" as="geometry" /></mxCell>
+<mxCell id="16" value="k3s-node1
+192.168.100.201
+Control-Plane / etcd
+PostgreSQL CNPG replica
+Traefik Ingress
+App Pods round-robin" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#6366F1;fontColor=#F8FAFC;fontSize=9;" parent="1" vertex="1"><mxGeometry x="40" y="279" width="340" height="100" as="geometry" /></mxCell>
+<mxCell id="18" value="k3s-node2
+192.168.100.202
+Control-Plane
+PostgreSQL replica
+NATS JetStream
+Valkey Cache" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#6366F1;fontColor=#F8FAFC;fontSize=9;" parent="1" vertex="1"><mxGeometry x="420" y="279" width="340" height="100" as="geometry" /></mxCell>
+<mxCell id="20" value="k3s-node3
+192.168.100.203
+Control-Plane
+PostgreSQL replica
+Zeebe 8.5 BPMN
+Garage S3 Storage" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#6366F1;fontColor=#F8FAFC;fontSize=9;" parent="1" vertex="1"><mxGeometry x="800" y="279" width="340" height="100" as="geometry" /></mxCell>
+<mxCell id="21" value="NAMESPACES" style="swimlane;startSize=30;fillColor=#1E293B;strokeColor=#06B6D4;fontColor=#06B6D4;fontSize=14;fontStyle=1;whiteSpace=wrap;html=1;rounded=1;arcSize=8;" parent="1" vertex="1"><mxGeometry x="40" y="399" width="1520" height="160" as="geometry" /></mxCell>
+<mxCell id="23" value="auth
+Ory Hydra / Kratos" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#312E81;strokeColor=#818CF8;fontColor=#F8FAFC;fontSize=9;" parent="1" vertex="1"><mxGeometry x="60" y="434" width="260" height="100" as="geometry" /></mxCell>
+<mxCell id="25" value="database
+CloudNativePG" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E3A5F;strokeColor=#38BDF8;fontColor=#F8FAFC;fontSize=9;" parent="1" vertex="1"><mxGeometry x="350" y="434" width="260" height="100" as="geometry" /></mxCell>
+<mxCell id="27" value="platform
+NATS/Valkey/Garage/Zeebe/cloudflared" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#422006;strokeColor=#F59E0B;fontColor=#F8FAFC;fontSize=9;" parent="1" vertex="1"><mxGeometry x="640" y="434" width="260" height="100" as="geometry" /></mxCell>
+<mxCell id="29" value="arda-app
+auth-gw/iam/platform/finance
+workflow/crm/hrm/notif/media/mdm" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0F766E;strokeColor=#2DD4BF;fontColor=#F8FAFC;fontSize=9;" parent="1" vertex="1"><mxGeometry x="930" y="434" width="260" height="100" as="geometry" /></mxCell>
+<mxCell id="31" value="arda-web
+Web frontends" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E1B4B;strokeColor=#A5B4FC;fontColor=#F8FAFC;fontSize=9;" parent="1" vertex="1"><mxGeometry x="1220" y="434" width="260" height="100" as="geometry" /></mxCell>
+<mxCell id="32" value="NETWORK ROUTING: Cloudflare &gt; cloudflared &gt; Traefik &gt; auth-gateway &gt; Backend &gt; Data" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#06B6D4;fontColor=#F8FAFC;fontSize=11;fontStyle=1;" parent="1" vertex="1"><mxGeometry x="40" y="579" width="1520" height="44" as="geometry" /></mxCell>
+<mxCell id="33" value="push" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#C084FC;fontColor=#C084FC;fontSize=10;" parent="1" source="4" target="10" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+<mxCell id="34" value="push" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#C084FC;fontColor=#C084FC;fontSize=10;" parent="1" source="6" target="10" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+<mxCell id="35" value="push" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#C084FC;fontColor=#C084FC;fontSize=10;" parent="1" source="8" target="10" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+<mxCell id="36" value="sync" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#C084FC;fontColor=#C084FC;fontSize=10;" parent="1" source="10" target="12" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+<mxCell id="37" value="GitOps" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#06B6D4;fontColor=#06B6D4;fontSize=10;;dashed=1" parent="1" source="4" target="12" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+<mxCell id="38" value="GitOps" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#06B6D4;fontColor=#06B6D4;fontSize=10;;dashed=1" parent="1" source="6" target="12" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+<mxCell id="39" value="GitOps" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#06B6D4;fontColor=#06B6D4;fontSize=10;;dashed=1" parent="1" source="8" target="12" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+<mxCell id="40" value="deploy" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#06B6D4;fontColor=#06B6D4;fontSize=10;" parent="1" source="12" target="15" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+<mxCell id="41" value="deploy" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#06B6D4;fontColor=#06B6D4;fontSize=10;" parent="1" source="12" target="17" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+<mxCell id="42" value="deploy" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#06B6D4;fontColor=#06B6D4;fontSize=10;" parent="1" source="12" target="19" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+<mxCell id="43" value="sync" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#C084FC;fontColor=#C084FC;fontSize=10;;dashed=1" parent="1" source="12" target="22" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+<mxCell id="44" value="sync" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#C084FC;fontColor=#C084FC;fontSize=10;;dashed=1" parent="1" source="12" target="24" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1300" width="1600" height="1300" font-family="system-ui, -apple-system, sans-serif">
+<defs>
+  <filter id="s"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.3"/></filter>
+  <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#0B1120"/><stop offset="100%" stop-color="#0F172A"/>
+  </linearGradient>
+  <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M0,0 L10,5 L0,10 Z" fill="#64748B"/>
+  </marker>
+  <marker id="ac" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M0,0 L10,5 L0,10 Z" fill="#06B6D4"/>
+  </marker>
+  <marker id="ai" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M0,0 L10,5 L0,10 Z" fill="#6366F1"/>
+  </marker>
+  <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M0,0 L10,5 L0,10 Z" fill="#10B981"/>
+  </marker>
+</defs>
+<rect width="1600" height="1300" fill="url(#bg)"/>
+<text x="30" y="36" fill="#F8FAFC" font-size="20" font-weight="700">Arda Platform - System Architecture</text>
+<rect x="20" y="60" width="1560" height="80" rx="8" fill="#1E293B" stroke="#06B6D4" stroke-width="1.5" stroke-opacity="0.5"/>
+<path d="M20,88 L1580,88" stroke="#06B6D4" stroke-width="1" stroke-opacity="0.3"/>
+<text x="32" y="79" fill="#06B6D4" font-size="12" font-weight="600">CLIENTS</text>
+<rect x="60" y="95" width="150" height="38" rx="6" fill="#1E1B4B" stroke="#A5B4FC" stroke-width="1.5" filter="url(#s)"/>
+<text x="135.0" y="114.0" fill="#F8FAFC" font-size="11" font-weight="600" text-anchor="middle">Browser</text>
+<text x="135.0" y="127" fill="#F8FAFC" font-size="9" text-anchor="middle" opacity="0.7">SPA</text>
+<rect x="240" y="95" width="150" height="38" rx="6" fill="#1E1B4B" stroke="#A5B4FC" stroke-width="1.5" filter="url(#s)"/>
+<text x="315.0" y="114.0" fill="#F8FAFC" font-size="11" font-weight="600" text-anchor="middle">Mobile App</text>
+<text x="315.0" y="127" fill="#F8FAFC" font-size="9" text-anchor="middle" opacity="0.7">React Native</text>
+<rect x="420" y="95" width="150" height="38" rx="6" fill="#1E1B4B" stroke="#A5B4FC" stroke-width="1.5" filter="url(#s)"/>
+<text x="495.0" y="114.0" fill="#F8FAFC" font-size="11" font-weight="600" text-anchor="middle">API Client</text>
+<text x="495.0" y="127" fill="#F8FAFC" font-size="9" text-anchor="middle" opacity="0.7">REST/gRPC</text>
+<rect x="20" y="160" width="1560" height="80" rx="8" fill="#1E293B" stroke="#06B6D4" stroke-width="1.5" stroke-opacity="0.5"/>
+<path d="M20,188 L1580,188" stroke="#06B6D4" stroke-width="1" stroke-opacity="0.3"/>
+<text x="32" y="179" fill="#06B6D4" font-size="12" font-weight="600">CLOUDFLARE / EDGE</text>
+<rect x="60" y="195" width="160" height="38" rx="6" fill="#0C4A6E" stroke="#06B6D4" stroke-width="1.5" filter="url(#s)"/>
+<text x="140.0" y="214.0" fill="#F8FAFC" font-size="11" font-weight="600" text-anchor="middle">Cloudflare</text>
+<text x="140.0" y="227" fill="#F8FAFC" font-size="9" text-anchor="middle" opacity="0.7">DDoS/WAF/CDN</text>
+<rect x="280" y="195" width="160" height="38" rx="6" fill="#0C4A6E" stroke="#06B6D4" stroke-width="1.5" filter="url(#s)"/>
+<text x="360.0" y="214.0" fill="#F8FAFC" font-size="11" font-weight="600" text-anchor="middle">cloudflared Tunnel</text>
+<rect x="20" y="260" width="1560" height="380" rx="8" fill="#1E293B" stroke="#6366F1" stroke-width="1.5" stroke-opacity="0.5"/>
+<path d="M20,288 L1580,288" stroke="#6366F1" stroke-width="1" stroke-opacity="0.3"/>
+<text x="32" y="279" fill="#6366F1" font-size="12" font-weight="600">K3S CLUSTER</text>
+<rect x="40" y="295" width="150" height="38" rx="6" fill="#312E81" stroke="#818CF8" stroke-width="1.5" filter="url(#s)"/>
+<text x="115.0" y="314.0" fill="#F8FAFC" font-size="11" font-weight="600" text-anchor="middle">Traefik Ingress</text>
+<rect x="220" y="295" width="240" height="38" rx="6" fill="#7C2D12" stroke="#FDBA74" stroke-width="1.5" filter="url(#s)"/>
+<text x="340.0" y="314.0" fill="#F8FAFC" font-size="11" font-weight="600" text-anchor="middle">auth-gateway (BFF)</text>
+<text x="340.0" y="327" fill="#F8FAFC" font-size="9" text-anchor="middle" opacity="0.7">Session / ForwardAuth / Proxy</text>
+<rect x="40" y="343" width="200" height="38" rx="6" fill="#3730A3" stroke="#818CF8" stroke-width="1.5" filter="url(#s)"/>
+<text x="140.0" y="362.0" fill="#F8FAFC" font-size="11" font-weight="600" text-anchor="middle">Ory Hydra (OAuth2/OIDC)</text>
+<rect x="260" y="343" width="200" height="38" rx="6" fill="#3730A3" stroke="#818CF8" stroke-width="1.5" filter="url(#s)"/>
+<text x="360.0" y="362.0" fill="#F8FAFC" font-size="11" font-weight="600" text-anchor="middle">Ory Kratos (Identity)</text>
+<rect x="40" y="391" width="420" height="36" rx="6" fill="#422006" stroke="#F59E0B" stroke-width="1.5" filter="url(#s)"/>
+<text x="250.0" y="409.0" fill="#F8FAFC" font-size="11" font-weight="600" text-anchor="middle">NATS Event Bus</text>
+<text x="250.0" y="421" fill="#F8FAFC" font-size="9" text-anchor="middle" opacity="0.7">Async Events / Outbox Pattern</text>
+<rect x="40" y="437" width="420" height="36" rx="6" fill="#3B0764" stroke="#C084FC" stroke-width="1.5" filter="url(#s)"/>
+<text x="250.0" y="455.0" fill="#F8FAFC" font-size="11" font-weight="600" text-anchor="middle">Argo CD (GitOps)</text>
+<text x="250.0" y="467" fill="#F8FAFC" font-size="9" text-anchor="middle" opacity="0.7">Health Checks / Image Updater</text>
+<rect x="20" y="652" width="1560" height="220" rx="8" fill="#1E293B" stroke="#2DD4BF" stroke-width="1.5" stroke-opacity="0.5"/>
+<path d="M20,680 L1580,680" stroke="#2DD4BF" stroke-width="1" stroke-opacity="0.3"/>
+<text x="32" y="671" fill="#2DD4BF" font-size="12" font-weight="600">BACKEND MICROSERVICES</text>
+<rect x="40" y="687" width="150" height="46" rx="6" fill="#0F766E" stroke="#2DD4BF" stroke-width="1.5" filter="url(#s)"/>
+<text x="115.0" y="710.0" fill="#F8FAFC" font-size="11" font-weight="600" text-anchor="middle">iam-service</text>
+<text x="115.0" y="727" fill="#F8FAFC" font-size="9" text-anchor="middle" opacity="0.7">:8081</text>
+<rect x="208" y="687" width="150" height="46" rx="6" fill="#0F766E" stroke="#2DD4BF" stroke-width="1.5" filter="url(#s)"/>
+<text x="283.0" y="710.0" fill="#F8FAFC" font-size="11" font-weight="600" text-anchor="middle">platform-service</text>
+<text x="283.0" y="727" fill="#F8FAFC" font-size="9" text-anchor="middle" opacity="0.7">:8091</text>
+<rect x="376" y="687" width="150" height="46" rx="6" fill="#0F766E" stroke="#2DD4BF" stroke-width="1.5" filter="url(#s)"/>
+<text x="451.0" y="710.0" fill="#F8FAFC" font-size="11" font-weight="600" text-anchor="middle">finance-service</text>
+<text x="451.0" y="727" fill="#F8FAFC" font-size="9" text-anchor="middle" opacity="0.7">:8090</text>
+<rect x="544" y="687" width="150" height="46" rx="6" fill="#0F766E" stroke="#2DD4BF" stroke-width="1.5" filter="url(#s)"/>
+<text x="619.0" y="710.0" fill="#F8FAFC" font-size="11" font-weight="600" text-anchor="middle">workflow-service</text>
+<text x="619.0" y="727" fill="#F8FAFC" font-size="9" text-anchor="middle" opacity="0.7">:8093</text>
+<rect x="712" y="687" width="150" height="46" rx="6" fill="#0F766E" stroke="#2DD4BF" stroke-width="1.5" filter="url(#s)"/>
+<text x="787.0" y="710.0" fill="#F8FAFC" font-size="11" font-weight="600" text-anchor="middle">crm-service</text>
+<text x="787.0" y="727" fill="#F8FAFC" font-size="9" text-anchor="middle" opacity="0.7">:8094</text>
+<rect x="40" y="743" width="150" height="46" rx="6" fill="#0F766E" stroke="#2DD4BF" stroke-width="1.5" filter="url(#s)"/>
+<text x="115.0" y="766.0" fill="#F8FAFC" font-size="11" font-weight="600" text-anchor="middle">hrm-service</text>
+<text x="115.0" y="783" fill="#F8FAFC" font-size="9" text-anchor="middle" opacity="0.7">:8097</text>
+<rect x="208" y="743" width="150" height="46" rx="6" fill="#0F766E" stroke="#2DD4BF" stroke-width="1.5" filter="url(#s)"/>
+<text x="283.0" y="766.0" fill="#F8FAFC" font-size="11" font-weight="600" text-anchor="middle">notification-svc</text>
+<text x="283.0" y="783" fill="#F8FAFC" font-size="9" text-anchor="middle" opacity="0.7">:8095</text>
+<rect x="376" y="743" width="150" height="46" rx="6" fill="#0F766E" stroke="#2DD4BF" stroke-width="1.5" filter="url(#s)"/>
+<text x="451.0" y="766.0" fill="#F8FAFC" font-size="11" font-weight="600" text-anchor="middle">media-service</text>
+<text x="451.0" y="783" fill="#F8FAFC" font-size="9" text-anchor="middle" opacity="0.7">:8092</text>
+<rect x="544" y="743" width="150" height="46" rx="6" fill="#0F766E" stroke="#2DD4BF" stroke-width="1.5" filter="url(#s)"/>
+<text x="619.0" y="766.0" fill="#F8FAFC" font-size="11" font-weight="600" text-anchor="middle">mdm-service</text>
+<text x="619.0" y="783" fill="#F8FAFC" font-size="9" text-anchor="middle" opacity="0.7">:8096</text>
+<rect x="20" y="884" width="1560" height="120" rx="8" fill="#1E293B" stroke="#38BDF8" stroke-width="1.5" stroke-opacity="0.5"/>
+<path d="M20,912 L1580,912" stroke="#38BDF8" stroke-width="1" stroke-opacity="0.3"/>
+<text x="32" y="903" fill="#38BDF8" font-size="12" font-weight="600">DATA LAYER</text>
+<path d="M60,929 L60,969 A10,10 0 0,0 230,969 L230,929 A10,10 0 0,1 60,929 Z" fill="#1E3A5F" stroke="#38BDF8" stroke-width="1.5" filter="url(#s)"/>
+<text x="145.0" y="953.0" fill="#F8FAFC" font-size="11" font-weight="600" text-anchor="middle">CloudNativePG</text>
+<path d="M260,929 L260,969 A10,10 0 0,0 430,969 L430,929 A10,10 0 0,1 260,929 Z" fill="#1E3A5F" stroke="#38BDF8" stroke-width="1.5" filter="url(#s)"/>
+<text x="345.0" y="953.0" fill="#F8FAFC" font-size="11" font-weight="600" text-anchor="middle">Valkey Cache</text>
+<path d="M460,929 L460,969 A10,10 0 0,0 630,969 L630,929 A10,10 0 0,1 460,929 Z" fill="#1E3A5F" stroke="#38BDF8" stroke-width="1.5" filter="url(#s)"/>
+<text x="545.0" y="953.0" fill="#F8FAFC" font-size="11" font-weight="600" text-anchor="middle">Garage S3</text>
+<path d="M660,929 L660,969 A10,10 0 0,0 830,969 L830,929 A10,10 0 0,1 660,929 Z" fill="#1E3A5F" stroke="#38BDF8" stroke-width="1.5" filter="url(#s)"/>
+<text x="745.0" y="953.0" fill="#F8FAFC" font-size="11" font-weight="600" text-anchor="middle">Zeebe 8.5</text>
+</svg>
