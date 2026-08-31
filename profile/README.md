@@ -30,7 +30,7 @@ Browser / Mobile App / API Client
          │
     ┌────▼─────────────────────────┐
     │   Backend Microservices      │  ← HTTP/JSON + gRPC + NATS Events
-    │   (9 services)               │
+    │   (11 services)              │
     └────┬─────────────────────────┘
          │
     ┌────▼─────────────────────────┐
@@ -73,13 +73,14 @@ Browser / Mobile App / API Client
 
 **Shared packages (`@workspace/*`):** `ui` (shadcn components), `api` (HTTP client), `auth` (session/step-up), `i18n` (locales), `core` (list API helpers, routing), `theme` (tokens), `notifications`, `media`.
 
-### Backend — 9 Go Microservices
+### Backend — 11 Go Microservices
 
 All services share common libraries from `libs/go/`: `arda-auth`, `arda-errors`, `arda-events`, `arda-grpc`, `arda-proto`, `arda-postgres`, `arda-redis`.
 
 | Service | Port | Database | Responsibility |
 | --- | --- | --- | --- |
 | `auth-gateway` | 8082 | — | BFF/auth edge, OAuth/OIDC proxy, forward-auth, session, header injection |
+| `ai-service` | 8080 | `ai` | AI assistant, AG-UI agent runtime, conversations, approvals, knowledge RAG |
 | `iam-service` | 8081 | `iam` | Users, roles (Casbin), permissions, MFA, audit, login orchestration |
 | `platform-service` | 8091 | `common` | System parameters, lookups, organizations, geography, credit institutions |
 | `finance-service` | 8090 | `finance` | Chart of accounts, double-entry transactions, approvals, operation queues |
@@ -147,9 +148,9 @@ Route-level permissions enforced via `auth-gateway/configs/policy.yaml`:
 
 | Node | IP | Role |
 | --- | --- | --- |
-| `k3s-node1` | `192.168.100.201` | control-plane, etcd |
-| `k3s-node2` | `192.168.100.202` | control-plane, etcd |
-| `k3s-node3` | `192.168.100.203` | control-plane, etcd |
+| `k3s-node1` | `192.168.10.201` | control-plane, etcd |
+| `k3s-node2` | `192.168.10.202` | control-plane, etcd |
+| `k3s-node3` | `192.168.10.203` | control-plane, etcd |
 
 Runtime: K3s `v1.35.5+k3s1`, Traefik ingress, Cloudflare Tunnel (`arda.io.vn`).
 
@@ -189,7 +190,7 @@ Cloudflare Tunnel (arda.io.vn)
 | Resource | Access |
 | --- | --- |
 | PostgreSQL | NodePort `30432` |
-| Valkey | NodePort `30379` |
+| Valkey | NodePort `30379` (primary), `30380` (sentinel) |
 | NATS | `kubectl port-forward svc/nats 4222:4222` |
 | Hydra admin | NodePort `30445` |
 | Kratos admin | NodePort `30446` |
@@ -394,7 +395,7 @@ apps/<service>/
 
 | Repository | Purpose |
 | --- | --- |
-| [`arda-be`](https://github.com/arda-labs/arda-be) | Go 1.26 microservices workspace — 9 services, shared libs, protobuf, NATS events, Zeebe workers |
+| [`arda-be`](https://github.com/arda-labs/arda-be) | Go 1.26 microservices workspace — 11 services, shared libs, protobuf, NATS events, Zeebe workers |
 | [`arda-mfe`](https://github.com/arda-labs/arda-mfe) | Bun + Vite 8 + React 19 MFE — shell + 7 remotes via Module Federation |
 | [`arda-infra`](https://github.com/arda-labs/arda-infra) | K3s manifests, Argo CD applications, Traefik config, Ory auth, CloudNativePG |
 | [`.github`](https://github.com/arda-labs/.github) | Organization profile and GitHub metadata |
