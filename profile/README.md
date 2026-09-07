@@ -2,7 +2,7 @@
 
 > Where data flows with intelligence.
 
-**Arda Labs** builds a cloud-native, multi-tenant financial operations platform. The system is organized as three independent Git repositories: backend Go microservices (`arda-be`), a frontend React Module Federation shell (`arda-mfe`), and GitOps-managed Kubernetes infrastructure (`arda-infra`).
+**Arda Labs** builds a cloud-native, multi-tenant financial operations platform. The system is organized as four independent Git repositories: backend Go microservices (`arda-be`), a frontend React Module Federation shell (`arda-mfe`), GitOps-managed Kubernetes infrastructure (`arda-infra`), and k6 load tests (`arda-perf`).
 
 <p align="center">
   <img src="./assets/system-architecture.png" alt="Arda Platform Architecture Overview" height="800">
@@ -30,7 +30,7 @@ Browser / Mobile App / API Client
          │
     ┌────▼─────────────────────────┐
     │   Backend Microservices      │  ← HTTP/JSON + gRPC + NATS Events
-    │   (11 services)              │
+    │   (15 services)              │
     └────┬─────────────────────────┘
          │
     ┌────▼─────────────────────────┐
@@ -52,44 +52,56 @@ Browser / Mobile App / API Client
 | **Workflow** | Zeebe 8.5 | BPMN 2.0 execution; `workflow-service` as sole Zeebe facade |
 | **Storage** | CloudNativePG | PostgreSQL 18 with 3-node HA; automated failover via CNPG operator |
 | **Deployment** | GitOps (Argo CD) | Desired state in `arda-infra`; auto-sync + image updater |
-| **Client state** | Page-local | No TanStack Query; `useState` + `useEffect` + `useCallback` directly in pages |
+| **Client state** | Zustand + TanStack Query | Server state via `@workspace/query` (QueryProvider mounted by every remote); URL list state via `@workspace/admin-list` |
 
 ---
 
 ## Service Topology & Communication
 
-### Frontend — Module Federation (7 remotes + shell)
+### Frontend — Module Federation (13 remotes + shell)
 
 | Module | Port | Responsibility |
 | --- | --- | --- |
 | `shell` | 5000 | Layout, auth bootstrap, navigation, lazy remote loading |
 | `mfe-iam` | 5101 | Identity & access admin — users, groups, roles, permissions |
 | `mfe-platform` | 5102 | Master data & platform admin — organizations, lookups, geography |
-| `mfe-finance` | 5103 | Finance operations — accounts, transactions, approvals |
+| `mfe-finance` | 5103 | Finance operations — accounts, journal, operations, trial balance |
 | `mfe-account` | 5104 | Profile & account settings — security, sessions, devices |
 | `mfe-hrm` | 5105 | HRM admin — positions, employees, org units, registrations |
 | `mfe-workflow` | 5106 | BPMN workflow admin — case types, process config, modeler |
 | `mfe-crm` | 5107 | CRM & workbench — customers, transaction operations |
+| `mfe-ai` | 5108 | AI assistant full-page workspace (`/ai`) |
+| `mfe-loan` | 5109 | Loan — products, VFU, collections, disbursements |
+| `mfe-mdm` | 5110 | Master data — currencies, countries, interest rates |
+| `mfe-deposit` | 8110 | Deposit — savings, products, interbank |
+| `mfe-capital` | 8111 | Capital management — contracts |
+| `mfe-statistical` | 8112 | Statistical reporting — report definitions, indicators, submissions |
 
-**Shared packages (`@workspace/*`):** `ui` (shadcn components), `api` (HTTP client), `auth` (session/step-up), `i18n` (locales), `core` (list API helpers, routing), `theme` (tokens), `notifications`, `media`.
+**Shared packages (`@workspace/*`):** `ui` (shadcn components), `api` (HTTP client), `query` (TanStack Query provider/policy), `admin-list` (URL/list server-state orchestration), `auth` (session/step-up), `i18n` (locales), `theme` (tokens), `notifications`, `media`, `format` (money/percent/date helpers), `ai` (assistant runtime + tool renderers).
 
-### Backend — 11 Go Microservices
+### Backend — 15 Go Microservices
 
 All services share common libraries from `libs/go/`: `arda-auth`, `arda-errors`, `arda-events`, `arda-grpc`, `arda-proto`, `arda-postgres`, `arda-redis`.
 
-| Service | Port | Database | Responsibility |
-| --- | --- | --- | --- |
-| `auth-gateway` | 8082 | — | BFF/auth edge, OAuth/OIDC proxy, forward-auth, session, header injection |
-| `ai-service` | 8080 | `ai` | AI assistant, AG-UI agent runtime, conversations, approvals, knowledge RAG |
-| `iam-service` | 8081 | `iam` | Users, roles (Casbin), permissions, MFA, audit, login orchestration |
-| `platform-service` | 8091 | `common` | System parameters, lookups, organizations, geography, credit institutions |
-| `finance-service` | 8090 | `finance` | Chart of accounts, double-entry transactions, approvals, operation queues |
-| `workflow-service` | 8093 | `workflow` | Zeebe facade, business cases, BPMN process definitions, SLA, job workers |
-| `crm-service` | 8094 | `crm` | Customer management, amendments |
-| `hrm-service` | 8097 | `hrm` | Positions, employees, registrations |
-| `notification-service` | 8095 | `notification` | Notifications, Web Push, NATS outbox worker |
-| `media-service` | 8092 | `media` | S3 storage gateway (Garage) |
-| `mdm-service` | 8096 | — | Master Data Management *(scaffold)* |
+Container ports are unified at **HTTP 8080 / gRPC 9090** across all services; legacy per-service host ports remain only as `docker-compose.yml` host mappings.
+
+| Service | Database | Responsibility |
+| --- | --- | --- |
+| `auth-gateway` | — | BFF/auth edge, OAuth/OIDC proxy, forward-auth, session, header injection |
+| `ai-service` | `ai` | AI assistant, AG-UI agent runtime, conversations, approvals, knowledge RAG |
+| `iam-service` | `iam` | Users, roles (Casbin), permissions, MFA, audit, login orchestration |
+| `platform-service` | `platform` | System parameters, lookups, organizations, geography, credit institutions |
+| `finance-service` | `finance` | Chart of accounts, double-entry transactions, approvals, operation queues |
+| `workflow-service` | `workflow` | Zeebe facade, business cases, BPMN process definitions, SLA, job workers |
+| `crm-service` | `crm` | Customer management, amendments, BPM cases |
+| `hrm-service` | `hrm` | Positions, employees, registrations, BPM cases |
+| `notification-service` | `noti` | Notifications, Web Push, NATS outbox worker |
+| `media-service` | `media` | S3 storage gateway (Garage) |
+| `mdm-service` | `mdm` | Master Data Management — currencies, countries, interest rates |
+| `loan-service` | `loan` | Loan lifecycle — products, VFU, collections, disbursements, BPM workers |
+| `deposit-service` | `deposit` | Deposit accounts, term deposits, interbank |
+| `capital-service` | `capital` | Capital management — contracts |
+| `statistical-service` | `statistical` | Statistical reports — definitions, indicators, submissions |
 
 **Service-to-service communication:**
 - **HTTP/JSON** via auth-gateway for browser-facing APIs
@@ -202,7 +214,7 @@ Cloudflare Tunnel (arda.io.vn)
 | Layer | Technology |
 | --- | --- |
 | **Frontend** | React 19, TypeScript 6, Vite 8, Module Federation, Tailwind CSS 4, shadcn/ui, Zustand, React Hook Form + Zod, i18next |
-| **Backend** | Go 1.26, `net/http` (stdlib), gRPC, protobuf, PostgreSQL 18, goose migrations, Casbin RBAC, NATS JetStream |
+| **Backend** | Go 1.27, `net/http` (stdlib), gRPC (mTLS), protobuf, PostgreSQL 18, goose migrations, Casbin RBAC, NATS JetStream |
 | **Auth** | Ory Hydra (OAuth2/OIDC) + Ory Kratos (identity), auth-gateway (BFF with forward-auth) |
 | **Storage** | CloudNativePG (PostgreSQL 18, 3-node HA), Valkey (3-node cluster), Garage S3 (3-node) |
 | **Gateway** | Traefik with forward-auth, auth-gateway proxy |
@@ -325,10 +337,10 @@ When a domain action starts an approval flow:
 
 | Kind | Tool |
 | --- | --- |
-| Server state (API) | Page-local state (`useState` + `useEffect` + `useCallback`) |
+| Server state (API) | TanStack Query (`@workspace/query` — QueryProvider mounted by every remote) |
+| URL list state | `@workspace/admin-list` (`defineServerList` + `useServerDataTable`) |
 | Form state | React Hook Form + Zod schemas |
 | Client/session | Zustand (`@workspace/auth`, notifications, preferences) |
-| URL filters | `nuqs` or `useSearchParams` |
 
 ### Feature Folder Convention
 
@@ -395,9 +407,10 @@ apps/<service>/
 
 | Repository | Purpose |
 | --- | --- |
-| [`arda-be`](https://github.com/arda-labs/arda-be) | Go 1.26 microservices workspace — 11 services, shared libs, protobuf, NATS events, Zeebe workers |
-| [`arda-mfe`](https://github.com/arda-labs/arda-mfe) | Bun + Vite 8 + React 19 MFE — shell + 7 remotes via Module Federation |
+| [`arda-be`](https://github.com/arda-labs/arda-be) | Go 1.27 microservices workspace — 15 services, shared libs, protobuf, NATS events, Zeebe workers |
+| [`arda-mfe`](https://github.com/arda-labs/arda-mfe) | Bun + Vite 8 + React 19 MFE — shell + 13 remotes via Module Federation, deployed as Cloudflare Workers |
 | [`arda-infra`](https://github.com/arda-labs/arda-infra) | K3s manifests, Argo CD applications, Traefik config, Ory auth, CloudNativePG |
+| [`arda-perf`](https://github.com/arda-labs/arda-perf) | k6 load test scenarios against the production edge |
 | [`.github`](https://github.com/arda-labs/.github) | Organization profile and GitHub metadata |
 
 ---
