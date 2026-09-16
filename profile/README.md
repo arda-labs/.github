@@ -175,6 +175,7 @@ Runtime: K3s `v1.35.5+k3s1`, Traefik ingress, Cloudflare Tunnel (`arda.io.vn`).
 | `platform` | NATS (3-node), Valkey (3-node), Garage S3 (3-node), Zeebe 8.5, cloudflared |
 | `arda-app` | All backend microservices + auth-gateway |
 | `arda-web` | MFE shell and static assets |
+| `monitoring` | VictoriaMetrics, Grafana, Loki/Alloy, Gatus, node-exporter, kube-state-metrics |
 
 ### GitOps Pipeline
 
@@ -196,6 +197,20 @@ Cloudflare Tunnel (arda.io.vn)
     /assets/*, /mfes/* → web (MFE shell)
     catch-all → web (MFE shell SPA)
 ```
+
+### Monitoring & Logs
+
+| Component | Role |
+| --- | --- |
+| VictoriaMetrics + VMUI | scrapes every service and the cluster itself, 30 days retention |
+| Grafana | single UI: dashboards, Grafana Alerting, log explorer |
+| Loki + Alloy | central container logs (14 days), JSON fields as labels and structured metadata |
+| Gatus | 20 black-box endpoint checks + status page (+ Telegram once configured) |
+| node-exporter / kube-state-metrics / cAdvisor | node and per-pod metrics |
+
+Hosts (`monitoring.arda.io.vn`, `grafana.arda.io.vn`, `gatus.arda.io.vn`) sit
+behind Cloudflare Access. Manifests: `arda-infra/k8s/monitoring/`; runbook and
+LogQL examples: `arda-infra/docs/monitoring.md`.
 
 ### Dev Environment
 
