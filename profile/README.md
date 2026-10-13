@@ -52,7 +52,7 @@ Browser / Mobile App / API Client
 | **Workflow** | Zeebe 8.5 | BPMN 2.0 execution; `workflow-service` as sole Zeebe facade |
 | **Storage** | CloudNativePG | PostgreSQL 18 with 3-node HA; automated failover via CNPG operator |
 | **Deployment** | GitOps (Argo CD) | Desired state in `arda-infra`; auto-sync + image updater |
-| **Client state** | Zustand + TanStack Query | Server state via `@workspace/query` (QueryProvider mounted by every remote); URL list state via `@workspace/admin-list` |
+| **Client state** | Zustand + TanStack Query | Server state via `@workspace/query` (QueryProvider mounted by every remote); URL list state via `@workspace/list-page` |
 
 ---
 
@@ -77,7 +77,7 @@ Browser / Mobile App / API Client
 | `mfe-capital` | 8111 | Capital management — contracts |
 | `mfe-statistical` | 8112 | Statistical reporting — report definitions, indicators, submissions |
 
-**Shared packages (`@workspace/*`):** `ui` (shadcn components), `api` (HTTP client), `query` (TanStack Query provider/policy), `admin-list` (URL/list server-state orchestration), `auth` (session/step-up), `i18n` (locales), `theme` (tokens), `notifications`, `media`, `format` (money/percent/date helpers), `ai` (assistant runtime + tool renderers).
+**Shared packages (`@workspace/*`, 14):** `ui` (shadcn components), `api` (HTTP transport), `query` (TanStack Query provider/policy), `list-page` (URL/list server-state orchestration, table export), `auth` (session/step-up), `i18n` (locales), `theme` (tokens), `notifications`, `media`, `format` (money/percent/date helpers), `ai` (assistant runtime + tool renderers), `posting-flow` (accounting entry UI), `case-tabs` and `workflow-task` (workflow case and task helpers).
 
 ### Backend — 15 Go Microservices
 
@@ -174,7 +174,6 @@ Runtime: K3s `v1.35.5+k3s1`, Traefik ingress, Cloudflare Tunnel (`arda.io.vn`).
 | `database` | CloudNativePG PostgreSQL cluster (3-node HA) |
 | `platform` | NATS (3-node), Valkey (3-node), Garage S3 (3-node), Zeebe 8.5, cloudflared |
 | `arda-app` | All backend microservices + auth-gateway |
-| `arda-web` | MFE shell and static assets |
 | `monitoring` | VictoriaMetrics, Grafana, Loki/Alloy, Gatus, node-exporter, kube-state-metrics |
 
 ### GitOps Pipeline
@@ -186,16 +185,18 @@ GitHub (arda-be / arda-mfe / arda-infra)
     → K3s cluster
 ```
 
-- **Argo CD manages:** `database/`, `k8s/` (backend + frontend manifests)
+- **Argo CD syncs:** `overlays/thinkcenter-recovery` (backend, on top of `k8s/`) and `database/`. The frontend is not deployed to the cluster; Cloudflare Workers Builds deploy it from `arda-mfe`.
 - **Manual bootstrap:** `auth/setup.sh`, `platform/bootstrap/*`
 
 ### Network Routing
 
 ```
-Cloudflare Tunnel (arda.io.vn)
-    /api/* → auth-gateway → domain services
-    /assets/*, /mfes/* → web (MFE shell)
-    catch-all → web (MFE shell SPA)
+arda.io.vn (Cloudflare Workers)
+    /mfes/<app>/*  → Worker arda-<app> (remote assets)
+    /api/*         → passes through to the tunnel → auth-gateway (legacy path)
+    everything else → Worker arda-shell (shell SPA)
+api.arda.io.vn (Cloudflare Tunnel)
+    → Traefik → auth-gateway → domain services
 ```
 
 ### Monitoring & Logs
@@ -353,7 +354,7 @@ When a domain action starts an approval flow:
 | Kind | Tool |
 | --- | --- |
 | Server state (API) | TanStack Query (`@workspace/query` — QueryProvider mounted by every remote) |
-| URL list state | `@workspace/admin-list` (`defineServerList` + `useServerDataTable`) |
+| URL list state | `@workspace/list-page` (`defineServerList` + `useServerDataTable`) |
 | Form state | React Hook Form + Zod schemas |
 | Client/session | Zustand (`@workspace/auth`, notifications, preferences) |
 
